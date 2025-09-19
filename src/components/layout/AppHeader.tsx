@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, ChevronDown, MapPin, Settings, LogOut, User, Stethoscope } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -42,6 +43,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
   const [selectedClinic, setSelectedClinic] = useState(mockClinics[0]);
+  const { signOut, user } = useAuth();
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b bg-surface px-4 shadow-sm">
@@ -138,13 +140,12 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-9 px-2">
               <Avatar className="h-7 w-7 mr-2">
-                <AvatarImage src={mockUser.avatar} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                  {mockUser.firstName[0]}{mockUser.lastName[0]}
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <span className="hidden md:inline font-medium">
-                Dr. {mockUser.firstName} {mockUser.lastName}
+                {user?.email?.split('@')[0] || 'User'}
               </span>
               <ChevronDown className="h-4 w-4 ml-2" />
             </Button>
@@ -152,9 +153,8 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
               <div className="flex flex-col">
-                <span className="font-medium">Dr. {mockUser.firstName} {mockUser.lastName}</span>
-                <span className="text-sm text-muted-foreground">{mockUser.email}</span>
-                <span className="text-xs text-muted-foreground">{mockUser.role}</span>
+                <span className="font-medium">{user?.email}</span>
+                <span className="text-xs text-muted-foreground">Dental Professional</span>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -167,7 +167,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
               Account Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem onClick={() => signOut()} className="text-destructive">
               <LogOut className="h-4 w-4 mr-2" />
               Sign Out
             </DropdownMenuItem>
