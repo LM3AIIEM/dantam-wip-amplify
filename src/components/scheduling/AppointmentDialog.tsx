@@ -337,7 +337,7 @@ export function AppointmentDialog({
                     <SelectValue placeholder="Select resource" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No specific resource</SelectItem>
+                    <SelectItem value="none">No specific resource</SelectItem>
                     {resources.map(resource => (
                       <SelectItem key={resource.id} value={resource.id}>
                         <div className="flex items-center gap-2">
