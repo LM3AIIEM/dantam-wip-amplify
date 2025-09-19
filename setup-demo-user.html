@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup Demo User</title>
+</head>
+<body>
+    <h1>Setting up demo user...</h1>
+    <div id="result"></div>
+    
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+        
+        const supabase = createClient(
+            'https://krnkwuwpbplealmqiing.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtybmt3dXdwYnBsZWFsbXFpaW5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgyNzk4NDIsImV4cCI6MjA3Mzg1NTg0Mn0.Es0tXh_OBhsIz0MI1oj7ORHmi-ZLmaHTf2ZpKmtG4Ig'
+        )
+        
+        async function setupDemoUser() {
+            try {
+                // Try to sign up the demo user
+                const { data, error } = await supabase.auth.signUp({
+                    email: 'admin@dantam.com',
+                    password: 'admin123',
+                    options: {
+                        data: {
+                            first_name: 'Admin',
+                            last_name: 'User',
+                            role: 'admin'
+                        }
+                    }
+                })
+                
+                const resultDiv = document.getElementById('result')
+                
+                if (error) {
+                    if (error.message.includes('already registered')) {
+                        resultDiv.innerHTML = '<p style="color: green;">Demo user already exists! You can now login with admin@dantam.com / admin123</p>'
+                    } else {
+                        resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`
+                    }
+                } else {
+                    resultDiv.innerHTML = '<p style="color: green;">Demo user created successfully! You can now login with admin@dantam.com / admin123</p>'
+                }
+            } catch (err) {
+                document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${err.message}</p>`
+            }
+        }
+        
+        setupDemoUser()
+    </script>
+</body>
+</html>
