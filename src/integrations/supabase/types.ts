@@ -14,7 +14,329 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointment_types: {
+        Row: {
+          appointment_type: Database["public"]["Enums"]["appointment_type"]
+          color: string
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          name: string
+          requires_resources: string[] | null
+        }
+        Insert: {
+          appointment_type: Database["public"]["Enums"]["appointment_type"]
+          color?: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          name: string
+          requires_resources?: string[] | null
+        }
+        Update: {
+          appointment_type?: Database["public"]["Enums"]["appointment_type"]
+          color?: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          name?: string
+          requires_resources?: string[] | null
+        }
+        Relationships: []
+      }
+      appointments: {
+        Row: {
+          appointment_type_id: string
+          created_at: string
+          created_by: string | null
+          end_time: string
+          id: string
+          is_recurring: boolean
+          notes: string | null
+          patient_id: string
+          provider_id: string
+          recurring_pattern: Json | null
+          resource_id: string | null
+          start_time: string
+          status: Database["public"]["Enums"]["appointment_status"]
+          updated_at: string
+        }
+        Insert: {
+          appointment_type_id: string
+          created_at?: string
+          created_by?: string | null
+          end_time: string
+          id?: string
+          is_recurring?: boolean
+          notes?: string | null
+          patient_id: string
+          provider_id: string
+          recurring_pattern?: Json | null
+          resource_id?: string | null
+          start_time: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Update: {
+          appointment_type_id?: string
+          created_at?: string
+          created_by?: string | null
+          end_time?: string
+          id?: string
+          is_recurring?: boolean
+          notes?: string | null
+          patient_id?: string
+          provider_id?: string
+          recurring_pattern?: Json | null
+          resource_id?: string | null
+          start_time?: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_appointment_type_id_fkey"
+            columns: ["appointment_type_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      provider_schedules: {
+        Row: {
+          break_end_time: string | null
+          break_start_time: string | null
+          created_at: string
+          day_of_week: Database["public"]["Enums"]["day_of_week"]
+          end_time: string
+          id: string
+          is_available: boolean
+          provider_id: string
+          start_time: string
+        }
+        Insert: {
+          break_end_time?: string | null
+          break_start_time?: string | null
+          created_at?: string
+          day_of_week: Database["public"]["Enums"]["day_of_week"]
+          end_time: string
+          id?: string
+          is_available?: boolean
+          provider_id: string
+          start_time: string
+        }
+        Update: {
+          break_end_time?: string | null
+          break_start_time?: string | null
+          created_at?: string
+          day_of_week?: Database["public"]["Enums"]["day_of_week"]
+          end_time?: string
+          id?: string
+          is_available?: boolean
+          provider_id?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_schedules_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      provider_time_off: {
+        Row: {
+          created_at: string
+          end_time: string
+          id: string
+          is_recurring: boolean
+          provider_id: string
+          reason: string | null
+          recurring_pattern: Json | null
+          start_time: string
+        }
+        Insert: {
+          created_at?: string
+          end_time: string
+          id?: string
+          is_recurring?: boolean
+          provider_id: string
+          reason?: string | null
+          recurring_pattern?: Json | null
+          start_time: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string
+          id?: string
+          is_recurring?: boolean
+          provider_id?: string
+          reason?: string | null
+          recurring_pattern?: Json | null
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_time_off_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      providers: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          license_number: string | null
+          name: string
+          phone: string | null
+          provider_type: Database["public"]["Enums"]["provider_type"]
+          specialization: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          license_number?: string | null
+          name: string
+          phone?: string | null
+          provider_type?: Database["public"]["Enums"]["provider_type"]
+          specialization?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          license_number?: string | null
+          name?: string
+          phone?: string | null
+          provider_type?: Database["public"]["Enums"]["provider_type"]
+          specialization?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_available: boolean
+          maintenance_schedule: Json | null
+          name: string
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_available?: boolean
+          maintenance_schedule?: Json | null
+          name: string
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_available?: boolean
+          maintenance_schedule?: Json | null
+          name?: string
+          resource_type?: Database["public"]["Enums"]["resource_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      wait_list: {
+        Row: {
+          appointment_type_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_notified: boolean
+          notes: string | null
+          patient_id: string
+          preferred_date: string | null
+          preferred_time_end: string | null
+          preferred_time_start: string | null
+          priority: number
+          provider_id: string | null
+        }
+        Insert: {
+          appointment_type_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_notified?: boolean
+          notes?: string | null
+          patient_id: string
+          preferred_date?: string | null
+          preferred_time_end?: string | null
+          preferred_time_start?: string | null
+          priority?: number
+          provider_id?: string | null
+        }
+        Update: {
+          appointment_type_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_notified?: boolean
+          notes?: string | null
+          patient_id?: string
+          preferred_date?: string | null
+          preferred_time_end?: string | null
+          preferred_time_start?: string | null
+          priority?: number
+          provider_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wait_list_appointment_type_id_fkey"
+            columns: ["appointment_type_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wait_list_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +345,33 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      appointment_status:
+        | "scheduled"
+        | "confirmed"
+        | "checked_in"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
+        | "no_show"
+      appointment_type:
+        | "consultation"
+        | "cleaning"
+        | "filling"
+        | "extraction"
+        | "root_canal"
+        | "crown"
+        | "checkup"
+        | "emergency"
+      day_of_week:
+        | "monday"
+        | "tuesday"
+        | "wednesday"
+        | "thursday"
+        | "friday"
+        | "saturday"
+        | "sunday"
+      provider_type: "dentist" | "hygienist" | "specialist" | "assistant"
+      resource_type: "chair" | "operatory" | "equipment" | "room"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +498,37 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      appointment_status: [
+        "scheduled",
+        "confirmed",
+        "checked_in",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "no_show",
+      ],
+      appointment_type: [
+        "consultation",
+        "cleaning",
+        "filling",
+        "extraction",
+        "root_canal",
+        "crown",
+        "checkup",
+        "emergency",
+      ],
+      day_of_week: [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ],
+      provider_type: ["dentist", "hygienist", "specialist", "assistant"],
+      resource_type: ["chair", "operatory", "equipment", "room"],
+    },
   },
 } as const
