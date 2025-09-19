@@ -11,6 +11,10 @@
     --primary-foreground: 0 0% 100%;
     --primary-hover: 217 91% 55%;
     
+    /* Medical Green Accent */
+    --medical-green: 142 71% 45%; /* #16a34a converted to HSL */
+    --medical-green-foreground: 0 0% 100%;
+    
     /* Professional Secondary Palette */
     --secondary: 215 20% 65%; /* #64748b converted to HSL */
     --secondary-foreground: 215 25% 27%;
