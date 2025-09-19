@@ -1,4 +1,4 @@
-import { PatientFilters } from '@/types/patient';
+import { type PatientFilters } from '@/types/patient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,7 +17,7 @@ export function PatientFilters({
   onFiltersChange, 
   selectedCount,
   onBulkAction 
-}: PatientFiltersProps) => {
+}: PatientFiltersProps) {
   const handleSearchChange = (value: string) => {
     onFiltersChange({ ...filters, search: value });
   };
