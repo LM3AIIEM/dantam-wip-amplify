@@ -15,7 +15,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useScheduling } from '@/hooks/useScheduling';
 import { Appointment, AppointmentFormData, AvailabilitySlot } from '@/types/scheduling';
-import { mockPatients } from '@/data/mockPatients';
+import { usePatients } from '@/hooks/usePatients';
 
 interface AppointmentDialogProps {
   open: boolean;
@@ -41,6 +41,8 @@ export function AppointmentDialog({
     getAvailableSlots,
     loading 
   } = useScheduling();
+
+  const { patients, loading: patientsLoading } = usePatients();
 
   const [formData, setFormData] = useState<Partial<AppointmentFormData>>({
     patient_id: '',
@@ -175,7 +177,7 @@ export function AppointmentDialog({
     startDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
     const appointmentData: AppointmentFormData = {
-      patient_id: formData.patient_id || mockPatients[0].id,
+      patient_id: formData.patient_id || patients[0]?.id,
       provider_id: formData.provider_id,
       appointment_type_id: formData.appointment_type_id,
       resource_id: formData.resource_id,
@@ -261,7 +263,7 @@ export function AppointmentDialog({
                     <SelectValue placeholder="Select patient" />
                   </SelectTrigger>
                   <SelectContent>
-                    {mockPatients.map(patient => (
+                    {patients.map(patient => (
                       <SelectItem key={patient.id} value={patient.id}>
                         {patient.name}
                       </SelectItem>

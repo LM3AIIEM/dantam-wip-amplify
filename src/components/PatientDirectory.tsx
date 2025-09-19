@@ -14,10 +14,10 @@ import { PatientFilters } from './PatientFilters';
 import { FloatingActionButton } from './FloatingActionButton';
 import { PatientRegistration } from './patient/PatientRegistration';
 import { PatientProfileView } from './patient/PatientProfileView';
-import { mockPatients } from '@/data/mockPatients';
 import { Patient } from '@/types/patient';
 import { type PatientRegistration as PatientRegistrationType, PatientProfile } from '@/types/patient-management';
 import { toast } from 'sonner';
+import { usePatients } from '@/hooks/usePatients';
 
 interface PatientFilters {
   search: string;
@@ -26,6 +26,7 @@ interface PatientFilters {
 }
 
 export function PatientDirectory() {
+  const { patients, loading, createPatient } = usePatients();
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
   const [filters, setFilters] = useState<PatientFilters>({
@@ -36,7 +37,7 @@ export function PatientDirectory() {
   const [showRegistration, setShowRegistration] = useState(false);
   const [selectedPatientProfile, setSelectedPatientProfile] = useState<PatientProfile | null>(null);
 
-  const filteredPatients = mockPatients.filter(patient => {
+  const filteredPatients = patients.filter(patient => {
     const matchesSearch = !filters.search || 
       patient.name.toLowerCase().includes(filters.search.toLowerCase()) ||
       patient.id.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -51,10 +52,14 @@ export function PatientDirectory() {
     setShowRegistration(true);
   };
 
-  const handleRegistrationComplete = (data: PatientRegistrationType) => {
-    console.log('Registration completed:', data);
-    toast.success('Patient registration completed successfully');
-    setShowRegistration(false);
+  const handleRegistrationComplete = async (data: PatientRegistrationType) => {
+    try {
+      await createPatient(data);
+      toast.success('Patient registration completed successfully');
+      setShowRegistration(false);
+    } catch (error) {
+      console.error('Error creating patient:', error);
+    }
   };
 
   const handlePatientClick = (patient: Patient) => {
@@ -132,7 +137,7 @@ export function PatientDirectory() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="patient-card">
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{mockPatients.length}</div>
+            <div className="text-2xl font-bold">{patients.length}</div>
             <p className="text-sm text-muted-foreground">Total Patients</p>
           </CardContent>
         </Card>
@@ -140,7 +145,7 @@ export function PatientDirectory() {
         <Card className="patient-card">
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-success">
-              {mockPatients.filter(p => p.status === 'active').length}
+              {patients.filter(p => p.status === 'active').length}
             </div>
             <p className="text-sm text-muted-foreground">Active</p>
           </CardContent>
@@ -149,7 +154,7 @@ export function PatientDirectory() {
         <Card className="patient-card">
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-warning">
-              {mockPatients.filter(p => p.status === 'pending').length}
+              {patients.filter(p => p.status === 'pending').length}
             </div>
             <p className="text-sm text-muted-foreground">Pending</p>
           </CardContent>
@@ -192,25 +197,31 @@ export function PatientDirectory() {
       </div>
 
       {/* Patient List */}
-      <Tabs value={viewMode}>
-        <TabsContent value="table">
-          <PatientTable 
-            patients={filteredPatients} 
-            onPatientClick={handlePatientClick}
-          />
-        </TabsContent>
-        <TabsContent value="cards" className="space-y-4">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredPatients.map((patient) => (
-              <PatientCard 
-                key={patient.id} 
-                patient={patient} 
-                onClick={() => handlePatientClick(patient)}
-              />
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="text-muted-foreground">Loading patients...</div>
+        </div>
+      ) : (
+        <Tabs value={viewMode}>
+          <TabsContent value="table">
+            <PatientTable 
+              patients={filteredPatients} 
+              onPatientClick={handlePatientClick}
+            />
+          </TabsContent>
+          <TabsContent value="cards" className="space-y-4">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {filteredPatients.map((patient) => (
+                <PatientCard 
+                  key={patient.id} 
+                  patient={patient} 
+                  onClick={() => handlePatientClick(patient)}
+                />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      )}
 
       {/* Registration Modal */}
       {showRegistration && (

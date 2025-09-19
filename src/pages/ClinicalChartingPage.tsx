@@ -34,7 +34,7 @@ import {
   ClinicalNote,
   ClinicalAttachment
 } from '@/types/clinical-charting';
-import { mockPatients } from '@/data/mockPatients';
+import { usePatients } from '@/hooks/usePatients';
 
 // Mock data for procedures
 const mockProcedures: TreatmentProcedure[] = [

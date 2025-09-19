@@ -10,35 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Edit, Send, FileText, CreditCard } from 'lucide-react';
 import { PatientBill, TreatmentCharge } from '@/types/financial';
-
-const mockBills: PatientBill[] = [
-  {
-    id: '1',
-    patientId: 'p1',
-    patientName: 'John Smith',
-    billDate: '2024-01-15',
-    dueDate: '2024-02-15',
-    totalAmount: 1250.00,
-    insuranceAmount: 875.00,
-    patientAmount: 375.00,
-    paidAmount: 200.00,
-    balanceAmount: 175.00,
-    status: 'partial',
-    charges: [
-      {
-        id: '1',
-        treatmentCode: 'D0150',
-        treatmentName: 'Comprehensive Oral Evaluation',
-        providerFee: 150.00,
-        insuranceCoverage: 120.00,
-        patientPortion: 30.00,
-        quantity: 1,
-        total: 150.00
-      }
-    ]
-  },
-  // Add more mock data as needed
-];
+import { useFinancial } from '@/hooks/useFinancial';
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -58,9 +30,13 @@ const getStatusColor = (status: string) => {
 };
 
 export function PatientBilling() {
-  const [bills, setBills] = useState<PatientBill[]>(mockBills);
+  const { bills, loading } = useFinancial();
   const [selectedBill, setSelectedBill] = useState<PatientBill | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+
+  if (loading) {
+    return <div className="flex items-center justify-center py-8">Loading bills...</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -105,7 +81,7 @@ export function PatientBilling() {
                 <TableRow key={bill.id}>
                   <TableCell className="font-medium">{bill.patientName}</TableCell>
                   <TableCell>{new Date(bill.billDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(bill.dueDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{bill.dueDate ? new Date(bill.dueDate).toLocaleDateString() : 'N/A'}</TableCell>
                   <TableCell>{formatCurrency(bill.totalAmount)}</TableCell>
                   <TableCell>{formatCurrency(bill.paidAmount)}</TableCell>
                   <TableCell className="font-semibold">

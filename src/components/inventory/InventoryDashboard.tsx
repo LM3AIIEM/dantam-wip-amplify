@@ -1,28 +1,28 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState, useEffect } from 'react';
+import { Package, TrendingUp, AlertTriangle, DollarSign, Calendar, Wrench } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertTriangle, Package, TrendingUp, DollarSign, Calendar, Wrench } from 'lucide-react';
+import { useInventory } from '@/hooks/useInventory';
+import { InventoryReport } from '@/types/inventory';
 
-interface InventoryDashboardProps {
-  totalValue: number;
-  totalItems: number;
-  lowStockItems: number;
-  expiringItems: number;
-  pendingOrders: number;
-  maintenanceDue: number;
-}
+export function InventoryDashboard() {
+  const { getInventoryReport, loading } = useInventory();
+  const [report, setReport] = useState<InventoryReport | null>(null);
 
-export function InventoryDashboard({
-  totalValue,
-  totalItems,
-  lowStockItems,
-  expiringItems,
-  pendingOrders,
-  maintenanceDue
-}: InventoryDashboardProps) {
+  useEffect(() => {
+    const loadReport = async () => {
+      const reportData = await getInventoryReport();
+      setReport(reportData);
+    };
+    loadReport();
+  }, [getInventoryReport]);
+
+  if (loading || !report) {
+    return <div className="p-4">Loading inventory data...</div>;
+  }
+
   const alerts = [
     { id: 1, type: 'Low Stock', item: 'Composite Resin A2', severity: 'high' },
     { id: 2, type: 'Expiring', item: 'Local Anesthetic', severity: 'medium' },
@@ -45,7 +45,7 @@ export function InventoryDashboard({
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalValue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">${report.totalValue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
               +12% from last month
             </p>
@@ -58,7 +58,7 @@ export function InventoryDashboard({
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalItems}</div>
+            <div className="text-2xl font-bold">{report.totalItems.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
               Across {12} categories
             </p>
@@ -71,7 +71,7 @@ export function InventoryDashboard({
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">{lowStockItems}</div>
+            <div className="text-2xl font-bold text-destructive">{report.lowStockItems}</div>
             <p className="text-xs text-muted-foreground">
               Require immediate attention
             </p>
@@ -84,7 +84,7 @@ export function InventoryDashboard({
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-warning">{expiringItems}</div>
+            <div className="text-2xl font-bold text-warning">{report.expiringItems}</div>
             <p className="text-xs text-muted-foreground">
               Within next 30 days
             </p>
@@ -160,13 +160,7 @@ export function InventoryDashboard({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[
-              { category: 'Restorative Materials', value: 15000, percentage: 35 },
-              { category: 'Disposables', value: 8000, percentage: 18 },
-              { category: 'Instruments', value: 12000, percentage: 28 },
-              { category: 'Pharmaceuticals', value: 5000, percentage: 12 },
-              { category: 'Other', value: 3000, percentage: 7 }
-            ].map((item) => (
+            {report.topCategories.length > 0 ? report.topCategories.map((item) => (
               <div key={item.category} className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>{item.category}</span>
@@ -174,7 +168,11 @@ export function InventoryDashboard({
                 </div>
                 <Progress value={item.percentage} className="h-2" />
               </div>
-            ))}
+            )) : (
+              <div className="text-center text-muted-foreground py-4">
+                No inventory data available
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

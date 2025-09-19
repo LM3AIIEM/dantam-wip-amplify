@@ -27,7 +27,17 @@ const mockAgingReport: AgingReport = {
 };
 
 export default function FinancialPage() {
+  const { metrics, loading } = useFinancial();
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  // Default aging report structure
+  const agingReport: AgingReport = {
+    current: 5670.00,
+    thirty: 3240.00,
+    sixty: 2100.00,
+    ninety: 1340.00,
+    total: 12350.00
+  };
 
   const breadcrumbs = [
     { title: 'Financial Management', isCurrentPage: true }
@@ -56,8 +66,15 @@ export default function FinancialPage() {
 
           <TabsContent value="dashboard" className="space-y-6">
             <FinancialDashboard 
-              metrics={mockMetrics} 
-              agingReport={mockAgingReport} 
+              metrics={metrics || {
+                dailyRevenue: 0,
+                monthlyRevenue: 0,
+                yearlyRevenue: 0,
+                averageTransaction: 0,
+                collectionRate: 0,
+                outstandingBalance: 0
+              }} 
+              agingReport={agingReport} 
             />
           </TabsContent>
 

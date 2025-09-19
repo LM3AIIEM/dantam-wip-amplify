@@ -11,45 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreditCard, DollarSign, Receipt, RefreshCw, Calendar } from 'lucide-react';
 import { Transaction, PaymentPlan } from '@/types/financial';
-
-const mockTransactions: Transaction[] = [
-  {
-    id: '1',
-    patientId: 'p1',
-    patientName: 'John Smith',
-    amount: 250.00,
-    paymentMethod: { id: '1', name: 'Visa ****1234', type: 'credit_card', isActive: true },
-    date: '2024-01-15',
-    description: 'Cleaning and Examination',
-    status: 'completed',
-    receiptNumber: 'RCP-001'
-  },
-  {
-    id: '2',
-    patientId: 'p2',
-    patientName: 'Jane Doe',
-    amount: 150.00,
-    paymentMethod: { id: '2', name: 'Cash', type: 'cash', isActive: true },
-    date: '2024-01-14',
-    description: 'Consultation',
-    status: 'completed',
-    receiptNumber: 'RCP-002'
-  }
-];
-
-const mockPaymentPlans: PaymentPlan[] = [
-  {
-    id: '1',
-    patientId: 'p1',
-    totalAmount: 2500.00,
-    monthlyPayment: 250.00,
-    startDate: '2024-01-01',
-    endDate: '2024-10-01',
-    remainingBalance: 1750.00,
-    status: 'active',
-    autoPayEnabled: true
-  }
-];
+import { useFinancial } from '@/hooks/useFinancial';
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -69,8 +31,13 @@ const getStatusColor = (status: string) => {
 };
 
 export function PaymentProcessing() {
+  const { transactions, loading } = useFinancial();
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const [isPlanDialogOpen, setIsPlanDialogOpen] = useState(false);
+
+  if (loading) {
+    return <div className="flex items-center justify-center py-8">Loading transactions...</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -134,7 +101,7 @@ export function PaymentProcessing() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockTransactions.map((transaction) => (
+                  {transactions.map((transaction) => (
                     <TableRow key={transaction.id}>
                       <TableCell className="font-medium">{transaction.patientName}</TableCell>
                       <TableCell className="font-semibold">{formatCurrency(transaction.amount)}</TableCell>
@@ -185,29 +152,12 @@ export function PaymentProcessing() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockPaymentPlans.map((plan) => (
-                    <TableRow key={plan.id}>
-                      <TableCell className="font-medium">John Smith</TableCell>
-                      <TableCell>{formatCurrency(plan.totalAmount)}</TableCell>
-                      <TableCell>{formatCurrency(plan.monthlyPayment)}</TableCell>
-                      <TableCell className="font-semibold">{formatCurrency(plan.remainingBalance)}</TableCell>
-                      <TableCell>
-                        <Badge className={plan.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-                          {plan.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={plan.autoPayEnabled ? 'default' : 'secondary'}>
-                          {plan.autoPayEnabled ? 'Enabled' : 'Disabled'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="outline" size="sm">
-                          Manage
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {/* No payment plans yet */}
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                      No payment plans found
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </CardContent>
