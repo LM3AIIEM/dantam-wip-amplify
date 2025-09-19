@@ -23,7 +23,8 @@ export const PatientFiltersComponent = ({
   };
 
   const handleStatusChange = (value: string) => {
-    onFiltersChange({ ...filters, status: value });
+    // Convert "all" back to empty string for filtering logic
+    onFiltersChange({ ...filters, status: value === 'all' ? '' : value });
   };
 
   const handleDateStartChange = (value: string) => {
@@ -64,12 +65,12 @@ export const PatientFiltersComponent = ({
               />
             </div>
             
-            <Select value={filters.status} onValueChange={handleStatusChange}>
+            <Select value={filters.status || 'all'} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full md:w-48 medical-input">
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Statuses</SelectItem>
+                <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
