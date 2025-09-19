@@ -12,7 +12,7 @@ interface PatientFiltersProps {
   onBulkAction: (action: string) => void;
 }
 
-export const PatientFiltersComponent = ({ 
+export function PatientFilters({ 
   filters, 
   onFiltersChange, 
   selectedCount,
@@ -162,4 +162,4 @@ export const PatientFiltersComponent = ({
       </CardContent>
     </Card>
   );
-};
+}

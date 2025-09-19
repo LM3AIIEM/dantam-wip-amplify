@@ -7,8 +7,7 @@ import { cn } from '@/lib/utils';
 
 interface PatientCardProps {
   patient: Patient;
-  selected: boolean;
-  onSelect: (patientId: string) => void;
+  onClick?: () => void;
 }
 
 const statusConfig = {
@@ -18,28 +17,16 @@ const statusConfig = {
   discharged: { className: 'status-discharged', label: 'Discharged' }
 };
 
-export const PatientCard = ({ patient, selected, onSelect }: PatientCardProps) => {
+export function PatientCard({ patient, onClick }: PatientCardProps) {
   const statusInfo = statusConfig[patient.status];
 
   return (
-    <Card className={cn(
-      'patient-card cursor-pointer transition-all duration-200',
-      selected && 'ring-2 ring-primary bg-primary/5'
-    )}>
+    <Card className="patient-card hover:shadow-lg transition-all duration-200 cursor-pointer" onClick={onClick}>
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={selected}
-              onChange={() => onSelect(patient.id)}
-              className="rounded border-border"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <div>
-              <h3 className="font-semibold text-foreground text-lg">{patient.name}</h3>
-              <p className="text-sm text-muted-foreground">ID: {patient.id}</p>
-            </div>
+          <div>
+            <h3 className="font-semibold text-foreground text-lg">{patient.name}</h3>
+            <p className="text-sm text-muted-foreground">ID: {patient.id}</p>
           </div>
           <Badge className={cn('text-xs font-medium', statusInfo.className)}>
             {statusInfo.label}
@@ -91,4 +78,4 @@ export const PatientCard = ({ patient, selected, onSelect }: PatientCardProps) =
       </CardContent>
     </Card>
   );
-};
+}

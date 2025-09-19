@@ -1,367 +1,226 @@
-import { useState, useMemo } from 'react';
-import { Patient, PatientFilters, ViewMode, SortField, SortDirection } from '@/types/patient';
-import { mockPatients } from '@/data/mockPatients';
-import { PatientCard } from '@/components/PatientCard';
-import { PatientTable } from '@/components/PatientTable';
-import { PatientFiltersComponent } from '@/components/PatientFilters';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, 
-  LayoutGrid, 
-  List, 
-  ChevronLeft, 
-  ChevronRight,
-  Users,
-  Activity,
-  Clock,
-  AlertCircle
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState } from 'react';
+import { Search, Filter, Download, MessageSquare, UserPlus, MoreHorizontal, Grid, List } from 'lucide-react';
 
-export const PatientDirectory = () => {
-  const { toast } = useToast();
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PatientCard } from './PatientCard';
+import { PatientTable } from './PatientTable';
+import { PatientFilters } from './PatientFilters';
+import { FloatingActionButton } from './FloatingActionButton';
+import { PatientRegistration } from './patient/PatientRegistration';
+import { PatientProfileView } from './patient/PatientProfileView';
+import { mockPatients } from '@/data/mockPatients';
+import { Patient } from '@/types/patient';
+import { type PatientRegistration as PatientRegistrationType, PatientProfile } from '@/types/patient-management';
+import { toast } from 'sonner';
+
+interface PatientFilters {
+  search: string;
+  status: string;
+  dateRange: { start: string; end: string };
+}
+
+export function PatientDirectory() {
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [sortField, setSortField] = useState<SortField>('name');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [filters, setFilters] = useState<PatientFilters>({
     search: '',
     status: '',
     dateRange: { start: '', end: '' }
   });
+  const [showRegistration, setShowRegistration] = useState(false);
+  const [selectedPatientProfile, setSelectedPatientProfile] = useState<PatientProfile | null>(null);
 
-  // Filter and sort patients
-  const filteredAndSortedPatients = useMemo(() => {
-    let filtered = mockPatients.filter(patient => {
-      const matchesSearch = !filters.search || 
-        patient.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-        patient.id.toLowerCase().includes(filters.search.toLowerCase()) ||
-        patient.phone.includes(filters.search);
-      
-      const matchesStatus = !filters.status || patient.status === filters.status;
-      
-      const matchesDateRange = (!filters.dateRange.start || patient.lastVisit >= filters.dateRange.start) &&
-        (!filters.dateRange.end || patient.lastVisit <= filters.dateRange.end);
-      
-      return matchesSearch && matchesStatus && matchesDateRange;
-    });
+  const filteredPatients = mockPatients.filter(patient => {
+    const matchesSearch = !filters.search || 
+      patient.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+      patient.id.toLowerCase().includes(filters.search.toLowerCase()) ||
+      patient.phone.includes(filters.search);
+    
+    const matchesStatus = !filters.status || patient.status === filters.status;
+    
+    return matchesSearch && matchesStatus;
+  });
 
-    // Sort
-    filtered.sort((a, b) => {
-      let aValue: string | number = a[sortField];
-      let bValue: string | number = b[sortField];
-      
-      if (sortField === 'lastVisit') {
-        aValue = new Date(aValue as string).getTime();
-        bValue = new Date(bValue as string).getTime();
-      }
-      
-      if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = (bValue as string).toLowerCase();
-      }
-      
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-    return filtered;
-  }, [filters, sortField, sortDirection]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredAndSortedPatients.length / itemsPerPage);
-  const paginatedPatients = filteredAndSortedPatients.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  // Statistics
-  const stats = useMemo(() => {
-    const total = mockPatients.length;
-    const active = mockPatients.filter(p => p.status === 'active').length;
-    const pending = mockPatients.filter(p => p.status === 'pending').length;
-    const recentVisits = mockPatients.filter(p => {
-      const lastVisit = new Date(p.lastVisit);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return lastVisit >= weekAgo;
-    }).length;
-
-    return { total, active, pending, recentVisits };
-  }, []);
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
+  const handleAddPatient = () => {
+    setShowRegistration(true);
   };
 
-  const handleSelectPatient = (patientId: string) => {
-    setSelectedPatients(prev => 
-      prev.includes(patientId) 
-        ? prev.filter(id => id !== patientId)
-        : [...prev, patientId]
+  const handleRegistrationComplete = (data: PatientRegistrationType) => {
+    console.log('Registration completed:', data);
+    toast.success('Patient registration completed successfully');
+    setShowRegistration(false);
+  };
+
+  const handlePatientClick = (patient: Patient) => {
+    const patientProfile: PatientProfile = {
+      ...patient,
+      personalInfo: {
+        firstName: patient.name.split(' ')[0],
+        lastName: patient.name.split(' ').slice(1).join(' ') || '',
+        dateOfBirth: new Date('1990-01-01'),
+        gender: 'male' as const,
+        phone: patient.phone,
+        email: patient.email,
+        address: {
+          street: '123 Main St',
+          city: 'Mumbai',
+          state: 'Maharashtra',
+          zipCode: '400001',
+          country: 'India',
+        },
+      },
+      emergencyContacts: {
+        contacts: [{
+          name: 'Emergency Contact',
+          relationship: 'Family',
+          phone: '+91 9999999999',
+          email: '',
+          isPrimary: true,
+        }],
+      },
+      documents: [],
+      appointments: [],
+      treatments: [],
+      communications: [],
+      familyMembers: [],
+      outstandingBalance: 1500,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    setSelectedPatientProfile(patientProfile);
+  };
+
+  if (selectedPatientProfile) {
+    return (
+      <PatientProfileView
+        patient={selectedPatientProfile}
+        onEdit={() => console.log('Edit patient')}
+        onScheduleAppointment={() => console.log('Schedule appointment')}
+        onSendMessage={() => console.log('Send message')}
+        onClose={() => setSelectedPatientProfile(null)}
+      />
     );
-  };
-
-  const handleSelectAll = (selected: boolean) => {
-    setSelectedPatients(selected ? paginatedPatients.map(p => p.id) : []);
-  };
-
-  const handleBulkAction = (action: string) => {
-    const count = selectedPatients.length;
-    switch (action) {
-      case 'export':
-        toast({
-          title: 'Export Started',
-          description: `Exporting ${count} patient records...`,
-        });
-        break;
-      case 'message':
-        toast({
-          title: 'Messaging',
-          description: `Opening message composer for ${count} patients...`,
-        });
-        break;
-      default:
-        if (action.startsWith('status-')) {
-          const newStatus = action.replace('status-', '');
-          toast({
-            title: 'Status Updated',
-            description: `Updated status to ${newStatus} for ${count} patients.`,
-          });
-        }
-    }
-    setSelectedPatients([]);
-  };
-
-  const addPatient = () => {
-    toast({
-      title: 'Add Patient',
-      description: 'Opening new patient registration form...',
-    });
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-semibold text-foreground">Patient Directory</h1>
-            <p className="text-muted-foreground mt-1">
-              Manage and view all patient records in your healthcare system
-            </p>
-          </div>
-          
-          <Button 
-            onClick={addPatient}
-            className="medical-button-primary flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Add Patient
-          </Button>
+    <div className="space-y-6 p-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold text-foreground">Patient Directory</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage and view all patient records in your healthcare system
+          </p>
         </div>
+        
+        <Button 
+          onClick={handleAddPatient}
+          className="medical-button-primary flex items-center gap-2"
+        >
+          <UserPlus className="h-4 w-4" />
+          Add Patient
+        </Button>
+      </div>
 
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-surface border">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Users className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-semibold">{stats.total}</p>
-                  <p className="text-sm text-muted-foreground">Total Patients</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-surface border">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-success/10 rounded-lg">
-                  <Activity className="h-5 w-5 text-success" />
-                </div>
-                <div>
-                  <p className="text-2xl font-semibold">{stats.active}</p>
-                  <p className="text-sm text-muted-foreground">Active Patients</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-surface border">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-warning/10 rounded-lg">
-                  <AlertCircle className="h-5 w-5 text-warning" />
-                </div>
-                <div>
-                  <p className="text-2xl font-semibold">{stats.pending}</p>
-                  <p className="text-sm text-muted-foreground">Pending</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-surface border">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Clock className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-semibold">{stats.recentVisits}</p>
-                  <p className="text-sm text-muted-foreground">Recent Visits</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters */}
-        <PatientFiltersComponent
-          filters={filters}
-          onFiltersChange={setFilters}
-          selectedCount={selectedPatients.length}
-          onBulkAction={handleBulkAction}
-        />
-
-        {/* View Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Button
-                variant={viewMode === 'table' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('table')}
-                className="flex items-center gap-2"
-              >
-                <List className="h-4 w-4" />
-                Table
-              </Button>
-              <Button
-                variant={viewMode === 'cards' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('cards')}
-                className="flex items-center gap-2"
-              >
-                <LayoutGrid className="h-4 w-4" />
-                Cards
-              </Button>
+      {/* Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="patient-card">
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{mockPatients.length}</div>
+            <p className="text-sm text-muted-foreground">Total Patients</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="patient-card">
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-success">
+              {mockPatients.filter(p => p.status === 'active').length}
             </div>
-
-            <Badge variant="outline" className="text-sm">
-              {filteredAndSortedPatients.length} patient{filteredAndSortedPatients.length !== 1 ? 's' : ''}
-            </Badge>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Show:</span>
-              <Select value={itemsPerPage.toString()} onValueChange={(value) => {
-                setItemsPerPage(Number(value));
-                setCurrentPage(1);
-              }}>
-                <SelectTrigger className="w-20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectContent>
-              </Select>
+            <p className="text-sm text-muted-foreground">Active</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="patient-card">
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-warning">
+              {mockPatients.filter(p => p.status === 'pending').length}
             </div>
-          </div>
-        </div>
+            <p className="text-sm text-muted-foreground">Pending</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="patient-card">
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-primary">12</div>
+            <p className="text-sm text-muted-foreground">New This Week</p>
+          </CardContent>
+        </Card>
+      </div>
 
-        {/* Patient List */}
-        {viewMode === 'table' ? (
-          <PatientTable
-            patients={paginatedPatients}
-            selectedPatients={selectedPatients}
-            onSelectPatient={handleSelectPatient}
-            onSelectAll={handleSelectAll}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            onSort={handleSort}
+      {/* Filters */}
+      <PatientFilters
+        filters={filters}
+        onFiltersChange={setFilters}
+        selectedCount={selectedPatients.length}
+        onBulkAction={(action) => console.log('Bulk action:', action)}
+      />
+
+      {/* View Toggle */}
+      <div className="flex items-center justify-between">
+        <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'table' | 'cards')}>
+          <TabsList>
+            <TabsTrigger value="table" className="flex items-center gap-2">
+              <List className="h-4 w-4" />
+              Table
+            </TabsTrigger>
+            <TabsTrigger value="cards" className="flex items-center gap-2">
+              <Grid className="h-4 w-4" />
+              Cards
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <Badge variant="outline">
+          {filteredPatients.length} patients
+        </Badge>
+      </div>
+
+      {/* Patient List */}
+      <Tabs value={viewMode}>
+        <TabsContent value="table">
+          <PatientTable 
+            patients={filteredPatients} 
+            onPatientClick={handlePatientClick}
           />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {paginatedPatients.map((patient) => (
-              <PatientCard
-                key={patient.id}
-                patient={patient}
-                selected={selectedPatients.includes(patient.id)}
-                onSelect={handleSelectPatient}
+        </TabsContent>
+        <TabsContent value="cards" className="space-y-4">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredPatients.map((patient) => (
+              <PatientCard 
+                key={patient.id} 
+                patient={patient} 
+                onClick={() => handlePatientClick(patient)}
               />
             ))}
           </div>
-        )}
+        </TabsContent>
+      </Tabs>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredAndSortedPatients.length)} of {filteredAndSortedPatients.length} results
-            </p>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              
-              <div className="flex items-center gap-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const page = i + 1;
-                  return (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setCurrentPage(page)}
-                      className="w-8 h-8 p-0"
-                    >
-                      {page}
-                    </Button>
-                  );
-                })}
-              </div>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Registration Modal */}
+      {showRegistration && (
+        <PatientRegistration
+          onComplete={handleRegistrationComplete}
+          onCancel={() => setShowRegistration(false)}
+        />
+      )}
+
+      <FloatingActionButton onClick={handleAddPatient} />
     </div>
   );
-};
+}
