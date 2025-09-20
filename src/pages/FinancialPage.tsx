@@ -7,6 +7,7 @@ import { PaymentProcessing } from '@/components/financial/PaymentProcessing';
 import { InsuranceManagement } from '@/components/financial/InsuranceManagement';
 import { FinancialReports } from '@/components/financial/FinancialReports';
 import { FinancialMetrics, AgingReport } from '@/types/financial';
+import { useFinancial } from '@/hooks/useFinancial';
 
 // Mock data for demonstration
 const mockMetrics: FinancialMetrics = {

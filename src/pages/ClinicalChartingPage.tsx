@@ -92,8 +92,15 @@ const mockProcedures: TreatmentProcedure[] = [
 
 export default function ClinicalChartingPage() {
   const [searchParams] = useSearchParams();
-  const patientId = searchParams.get('patientId') || '1';
-  const patient = mockPatients.find(p => p.id === patientId) || mockPatients[0];
+  const patientId = searchParams.get('patientId');
+  const { patients, loading } = usePatients();
+  const patient = patients.find(p => p.id === patientId) || patients[0] || {
+    id: '1',
+    name: 'Unknown Patient',
+    dateOfBirth: '1990-01-01',
+    lastVisit: '2024-01-01',
+    status: 'active' as const
+  };
 
   // State management
   const [chartType, setChartType] = useState<'adult' | 'pediatric'>('adult');

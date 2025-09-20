@@ -7,8 +7,10 @@ import { ReorderManagement } from '@/components/inventory/ReorderManagement';
 import { VendorManagement } from '@/components/inventory/VendorManagement';
 import { EquipmentMaintenance } from '@/components/inventory/EquipmentMaintenance';
 import { InventoryAnalytics } from '@/components/inventory/InventoryAnalytics';
+import { useInventory } from '@/hooks/useInventory';
 
 export default function InventoryPage() {
+  const { inventoryItems, getInventoryReport } = useInventory();
   const breadcrumbs = [
     { title: "Dashboard", href: "/dashboard" },
     { title: "Inventory Management", isCurrentPage: true }
@@ -32,14 +34,7 @@ export default function InventoryPage() {
           </TabsList>
           
           <TabsContent value="dashboard" className="space-y-4">
-            <InventoryDashboard
-              totalValue={100000}
-              totalItems={1250}
-              lowStockItems={8}
-              expiringItems={5}
-              pendingOrders={3}
-              maintenanceDue={2}
-            />
+            <InventoryDashboard />
           </TabsContent>
           
           <TabsContent value="tracking" className="space-y-4">
