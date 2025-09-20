@@ -27,7 +27,7 @@ export function PatientTable({ patients, onPatientClick }: PatientTableProps) {
             <TableHead>Phone</TableHead>
             <TableHead>Last Visit</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Primary Physician</TableHead>
+            <TableHead>Primary Carer</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
