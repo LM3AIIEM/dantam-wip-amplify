@@ -1,0 +1,11 @@
+Fix route mapping and sidebar navigation for CEO demo
+
+- Change root route (/) to show Dashboard instead of PatientDirectory
+- Update /patients route to show PatientDirectory
+- Remove /charts and /inventory routes completely
+- Update sidebar navigation:
+  - Remove Clinical Charts and Inventory items
+  - Fix route hrefs (appointments -> /scheduling, billing -> /financial)
+  - Update Communications title to COMMS
+- Add Amplify deployment configuration
+- Add _redirects file for SPA routing support

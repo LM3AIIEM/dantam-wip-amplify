@@ -1,0 +1,35 @@
+<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background square -->
+  <rect x="1" y="1" width="48" height="48" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  
+  <!-- Grid layout representing resources (enlarged and centered) -->
+  <g stroke="#94a3b8" stroke-width="1.8" fill="none">
+    <!-- Room grid (3x3) -->
+    <rect x="10.5" y="10.5" width="9.5" height="9.5" rx="2"/>
+    <rect x="20" y="10.5" width="9.5" height="9.5" rx="2"/>
+    <rect x="29.5" y="10.5" width="9.5" height="9.5" rx="2"/>
+    
+    <rect x="10.5" y="20" width="9.5" height="9.5" rx="2"/>
+    <rect x="20" y="20" width="9.5" height="9.5" rx="2"/>
+    <rect x="29.5" y="20" width="9.5" height="9.5" rx="2"/>
+    
+    <rect x="10.5" y="29.5" width="9.5" height="9.5" rx="2"/>
+    <rect x="20" y="29.5" width="9.5" height="9.5" rx="2"/>
+    <rect x="29.5" y="29.5" width="9.5" height="9.5" rx="2"/>
+  </g>
+  
+  <!-- Status indicators (repositioned for centered grid) -->
+  <circle cx="15.25" cy="15.25" r="2.5" fill="#22c55e"/> <!-- Available -->
+  <circle cx="24.75" cy="15.25" r="2.5" fill="#3b82f6"/> <!-- Occupied -->
+  <circle cx="34.25" cy="15.25" r="2.5" fill="#ef4444"/> <!-- Maintenance -->
+  
+  <circle cx="15.25" cy="24.75" r="2.5" fill="#3b82f6"/> <!-- Occupied -->
+  <circle cx="24.75" cy="24.75" r="2.5" fill="#22c55e"/> <!-- Available -->
+  <circle cx="34.25" cy="24.75" r="2.5" fill="#94a3b8"/> <!-- Offline -->
+  
+  <circle cx="15.25" cy="34.25" r="2.5" fill="#eab308"/> <!-- Reserved -->
+  <circle cx="24.75" cy="34.25" r="2.5" fill="#22c55e"/> <!-- Available -->
+  <circle cx="34.25" cy="34.25" r="2.5" fill="#3b82f6"/> <!-- Occupied -->
+  
+
+</svg>
