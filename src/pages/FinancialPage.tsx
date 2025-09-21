@@ -57,11 +57,10 @@ export default function FinancialPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="billing">Patient Billing</TabsTrigger>
             <TabsTrigger value="payments">Payments</TabsTrigger>
-            <TabsTrigger value="insurance">Insurance</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
@@ -85,10 +84,6 @@ export default function FinancialPage() {
 
           <TabsContent value="payments" className="space-y-6">
             <PaymentProcessing />
-          </TabsContent>
-
-          <TabsContent value="insurance" className="space-y-6">
-            <InsuranceManagement />
           </TabsContent>
 
           <TabsContent value="reports" className="space-y-6">
