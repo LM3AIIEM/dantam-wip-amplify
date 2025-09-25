@@ -182,33 +182,7 @@ export function ProviderLaneCalendar() {
           </Card>
           */}
 
-          {/* Provider Performance */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Today's Utilization
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {providers.map(provider => (
-                <div key={provider.id} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{provider.name}</span>
-                    <span className="text-sm text-primary font-semibold">
-                      {getProviderUtilization(provider.id)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div 
-                      className="bg-primary h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${getProviderUtilization(provider.id)}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          {/* Provider Performance - Moved to ChairStatusTabs component */}
 
           {/* Selected Event Details */}
           {selectedEvent && (
