@@ -97,12 +97,12 @@ export function ChairStatusPanel({ onChairClick }: ChairStatusPanelProps) {
     <div className="space-y-4">
       {/* Header */}
       <div className="space-y-3">
-        <h3 className="font-semibold text-base text-foreground">Chair Status</h3>
+        <h3 className="font-semibold text-lg text-foreground">Chair Status</h3>
         
         {/* Filter Dropdowns */}
         <div className="grid grid-cols-2 gap-2">
           <Select defaultValue="all">
-            <SelectTrigger className="h-8 text-xs">
+            <SelectTrigger className="h-9">
               <SelectValue placeholder="All Chairs" />
             </SelectTrigger>
             <SelectContent>
@@ -114,7 +114,7 @@ export function ChairStatusPanel({ onChairClick }: ChairStatusPanelProps) {
           </Select>
           
           <Select defaultValue="list">
-            <SelectTrigger className="h-8 text-xs">
+            <SelectTrigger className="h-9">
               <SelectValue placeholder="List View" />
             </SelectTrigger>
             <SelectContent>
@@ -126,41 +126,39 @@ export function ChairStatusPanel({ onChairClick }: ChairStatusPanelProps) {
       </div>
 
       {/* Chair List */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         {resources.map(resource => {
           const status = chairStatuses[resource.id];
-          const statusColor = getStatusColor(status?.status || 'available');
           const statusText = getStatusText(status?.status || 'available');
 
           return (
             <div 
               key={resource.id}
-              className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted cursor-pointer transition-colors"
+              className="flex items-center justify-between py-3 px-2 hover:bg-muted/50 cursor-pointer transition-colors rounded-md"
               onClick={() => onChairClick?.(resource)}
             >
-              <div className="flex-1 min-w-0">
-                <div className="font-medium text-sm text-foreground">
+              <div className="flex-1">
+                <div className="font-semibold text-foreground text-base">
                   {resource.name}
                 </div>
                 {status?.provider && (
-                  <div className="text-xs text-muted-foreground mt-0.5">
+                  <div className="text-sm text-muted-foreground mt-0.5">
                     {status.provider}
                   </div>
                 )}
               </div>
               
-              <div className="flex items-center gap-2">
-                <Badge 
-                  variant="outline" 
-                  className={`text-xs px-2 py-0.5 ${
-                    status?.status === 'occupied' ? 'text-red-700 border-red-200 bg-red-50' :
-                    status?.status === 'available' ? 'text-green-700 border-green-200 bg-green-50' :
-                    'text-yellow-700 border-yellow-200 bg-yellow-50'
-                  }`}
-                >
-                  {statusText}
-                </Badge>
-              </div>
+              <Badge 
+                className={`text-sm px-3 py-1 font-medium ${
+                  status?.status === 'occupied' 
+                    ? 'bg-red-100 text-red-700 hover:bg-red-100' 
+                    : status?.status === 'available' 
+                    ? 'bg-green-100 text-green-700 hover:bg-green-100' 
+                    : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100'
+                }`}
+              >
+                {statusText}
+              </Badge>
             </div>
           );
         })}
