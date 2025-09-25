@@ -3,6 +3,7 @@ import { ProviderLaneCalendar } from '@/components/scheduling/ProviderLaneCalend
 import { ResourceManagement } from '@/components/scheduling/ResourceManagement';
 import { ChairStatusPanel } from '@/components/scheduling/ChairStatusPanel';
 import { SchedulingMetrics } from '@/components/scheduling/SchedulingMetrics';
+import { TodaysAppointmentsList } from '@/components/scheduling/TodaysAppointmentsList';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -150,73 +151,9 @@ export default function SchedulingPage() {
             </Tabs>
           </div>
 
-          {/* Right Sidebar - Quick Actions */}
+          {/* Right Sidebar - Today's Appointments */}
           <div className="col-span-3 flex flex-col">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h3>
-            
-            <div className="space-y-4">
-              {/* Today's Summary */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium">Today's Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Appointments</span>
-                    <span className="font-medium">24</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Completed</span>
-                    <span className="font-medium text-success">18</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Remaining</span>
-                    <span className="font-medium text-warning">6</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={handleQuickBooking}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    New Appointment
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Users className="h-4 w-4 mr-2" />
-                    Add Patient
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Clock className="h-4 w-4 mr-2" />
-                    Emergency Slot
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Waiting List Preview */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium">Waiting List</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-4">
-                    <div className="text-2xl font-bold text-warning">3</div>
-                    <p className="text-xs text-muted-foreground">patients waiting</p>
-                    <Button variant="link" size="sm" className="mt-2 h-auto p-0" asChild>
-                      <a href="/wait-list">View all</a>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <TodaysAppointmentsList className="flex-1" />
           </div>
         </div>
       </div>
