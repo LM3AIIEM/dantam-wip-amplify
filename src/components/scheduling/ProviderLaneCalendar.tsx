@@ -64,42 +64,7 @@ export function ProviderLaneCalendar() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Provider Stats */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="h-5 w-5" />
-              Provider Schedule & Utilization
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowAppointmentDialog(true)}
-              >
-                New Appointment
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {providers.slice(0, 4).map(provider => (
-              <div key={provider.id} className="text-center p-3 bg-muted/20 rounded-lg">
-                <div className="text-sm font-medium">{provider.name}</div>
-                <div className="text-xs text-muted-foreground mb-2">{provider.provider_type}</div>
-                <div className="flex items-center justify-center gap-1">
-                  <Activity className="h-3 w-3" />
-                  <span className="text-sm font-semibold text-primary">
-                    {getProviderUtilization(provider.id)}%
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Header card removed to save space for calendar */}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Provider Lane Calendar */}
