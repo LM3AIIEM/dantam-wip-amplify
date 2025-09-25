@@ -157,7 +157,8 @@ export function ProviderLaneCalendar() {
 
         {/* Resource Utilization Sidebar */}
         <div className="space-y-4">
-          {/* Resource Status */}
+          {/* Resource Status - Commented out: Replaced by ChairStatusPanel in dashboard sidebar */}
+          {/*
           <Card>
             <CardHeader>
               <CardTitle className="text-sm flex items-center gap-2">
@@ -179,6 +180,7 @@ export function ProviderLaneCalendar() {
               ))}
             </CardContent>
           </Card>
+          */}
 
           {/* Provider Performance */}
           <Card>
