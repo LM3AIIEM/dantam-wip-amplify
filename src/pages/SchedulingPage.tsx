@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ProviderLaneCalendar } from '@/components/scheduling/ProviderLaneCalendar';
 import { ResourceManagement } from '@/components/scheduling/ResourceManagement';
 import { ChairStatusPanel } from '@/components/scheduling/ChairStatusPanel';
+import { SchedulingMetrics } from '@/components/scheduling/SchedulingMetrics';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -47,6 +48,9 @@ export default function SchedulingPage() {
             </Button>
           </div>
         </div>
+
+        {/* Metrics Overview */}
+        <SchedulingMetrics />
 
         {/* View Tabs */}
         <Tabs value={activeView} onValueChange={setActiveView}>
