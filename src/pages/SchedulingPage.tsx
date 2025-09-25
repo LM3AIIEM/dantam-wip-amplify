@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import { ProviderLaneCalendar } from '@/components/scheduling/ProviderLaneCalendar';
 import { ResourceManagement } from '@/components/scheduling/ResourceManagement';
+import { ChairStatusPanel } from '@/components/scheduling/ChairStatusPanel';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Users, Clock, MapPin } from 'lucide-react';
+import { Calendar, Users, Clock, MapPin, Grid3X3 } from 'lucide-react';
+import { Resource } from '@/types/scheduling';
 
 export default function SchedulingPage() {
   const [activeView, setActiveView] = useState('calendar');
+
+  const handleChairClick = (chair: Resource) => {
+    // TODO: Open chair schedule modal or navigate to detailed view
+    console.log('Chair clicked:', chair);
+  };
 
   const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -48,6 +55,10 @@ export default function SchedulingPage() {
               <Calendar className="h-4 w-4" />
               Provider Calendar
             </TabsTrigger>
+            <TabsTrigger value="chairs" className="flex items-center gap-2">
+              <Grid3X3 className="h-4 w-4" />
+              Chair Status
+            </TabsTrigger>
             <TabsTrigger value="resources" className="flex items-center gap-2">
               <MapPin className="h-4 w-4" />
               Resource View
@@ -56,6 +67,10 @@ export default function SchedulingPage() {
 
           <TabsContent value="calendar">
             <ProviderLaneCalendar />
+          </TabsContent>
+
+          <TabsContent value="chairs">
+            <ChairStatusPanel onChairClick={handleChairClick} />
           </TabsContent>
 
           <TabsContent value="resources">
