@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ProviderLaneCalendar } from '@/components/scheduling/ProviderLaneCalendar';
 import { ResourceManagement } from '@/components/scheduling/ResourceManagement';
-import { ChairStatusPanel } from '@/components/scheduling/ChairStatusPanel';
+import { ChairStatusTabs } from '@/components/scheduling/ChairStatusTabs';
 import { SchedulingMetrics } from '@/components/scheduling/SchedulingMetrics';
 import { TodaysAppointmentsList } from '@/components/scheduling/TodaysAppointmentsList';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -113,7 +113,7 @@ export default function SchedulingPage() {
                   </div>
                 </div>
               ) : (
-                <ChairStatusPanel onChairClick={handleChairClick} />
+                <ChairStatusTabs onChairClick={handleChairClick} />
               )}
             </div>
           </div>
