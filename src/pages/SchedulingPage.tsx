@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ProviderLaneCalendar } from '@/components/scheduling/ProviderLaneCalendar';
 import { ResourceManagement } from '@/components/scheduling/ResourceManagement';
 import { ChairStatusTabs } from '@/components/scheduling/ChairStatusTabs';
@@ -7,13 +8,21 @@ import { TodaysAppointmentsList } from '@/components/scheduling/TodaysAppointmen
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Users, Clock, MapPin, Grid3X3, Plus, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { Resource } from '@/types/scheduling';
 
 export default function SchedulingPage() {
-  const [activeView, setActiveView] = useState('calendar');
+  const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  
+  // Determine current view based on route
+  const getCurrentView = () => {
+    if (location.pathname === '/scheduling/resources') return 'resources';
+    if (location.pathname === '/scheduling/waitlist') return 'waitlist';
+    return 'calendar'; // default to calendar for /scheduling
+  };
+  
+  const currentView = getCurrentView();
 
   const handleChairClick = (chair: Resource) => {
     // TODO: Open chair schedule modal or navigate to detailed view
@@ -120,55 +129,46 @@ export default function SchedulingPage() {
 
           {/* Main Content Area */}
           <div className={`${sidebarCollapsed ? 'col-span-8' : 'col-span-6'} transition-all duration-300 flex flex-col`}>
-            {/* Calendar View Tabs */}
+            {/* Content based on current route */}
             <div className="flex items-center justify-between mb-4">
-              <Tabs value={activeView} onValueChange={setActiveView} className="flex-1 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <TabsList className="grid w-full grid-cols-3 max-w-md">
-                    <TabsTrigger value="calendar" className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      Calendar
-                    </TabsTrigger>
-                    <TabsTrigger value="timeline" className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      Timeline
-                    </TabsTrigger>
-                    <TabsTrigger value="resources" className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
-                      Resources
-                    </TabsTrigger>
-                  </TabsList>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleExpandCalendar}
-                    className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                    title="Expand calendar view"
-                  >
-                    <Maximize2 className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                <TabsContent value="calendar" className="flex-1 mt-4">
-                  <ProviderLaneCalendar />
-                </TabsContent>
-
-                <TabsContent value="timeline" className="flex-1 mt-4">
-                  <Card className="h-full">
-                    <CardContent className="p-6 flex items-center justify-center h-full">
-                      <div className="text-center">
-                        <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">Timeline View</h3>
-                        <p className="text-muted-foreground">Coming soon - Detailed timeline view of appointments</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="resources" className="flex-1 mt-4">
-                  <ResourceManagement />
-                </TabsContent>
-              </Tabs>
+              <div className="flex-1">
+                {currentView === 'calendar' && (
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-foreground">Calendar View</h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleExpandCalendar}
+                      className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                      title="Expand calendar view"
+                    >
+                      <Maximize2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+                {currentView === 'resources' && (
+                  <h3 className="text-lg font-semibold text-foreground">Resource Management</h3>
+                )}
+                {currentView === 'waitlist' && (
+                  <h3 className="text-lg font-semibold text-foreground">Wait List Management</h3>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex-1">
+              {currentView === 'calendar' && <ProviderLaneCalendar />}
+              {currentView === 'resources' && <ResourceManagement />}
+              {currentView === 'waitlist' && (
+                <Card className="h-full">
+                  <CardContent className="p-6 flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">Wait List Management</h3>
+                      <p className="text-muted-foreground">Coming soon - Wait list functionality</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
 
