@@ -66,126 +66,94 @@ export function ProviderLaneCalendar() {
     <div className="space-y-6">
       {/* Header card removed to save space for calendar */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="w-full">
         {/* Provider Lane Calendar - Full width */}
-        <div className="lg:col-span-4">
-          <Card className="h-full">
-            <CardContent className="p-6">
-              <FullCalendar
-                plugins={[timeGridPlugin, interactionPlugin]}
-                initialView="timeGridWeek"
-                headerToolbar={{
-                  left: 'prev,next today',
-                  center: 'title',
-                  right: 'timeGridWeek,timeGridDay'
-                }}
-                events={resourceEvents.map(event => ({
-                  ...event,
-                  title: `${event.extendedProps?.appointment?.provider?.name || 'Provider'}: ${event.title}`,
-                  backgroundColor: event.extendedProps?.appointment?.provider_id === providers[0]?.id ? 'hsl(217, 91%, 60%)' :
-                                   event.extendedProps?.appointment?.provider_id === providers[1]?.id ? 'hsl(142, 71%, 45%)' :
-                                   'hsl(215, 20%, 65%)'
-                }))}
-                slotMinTime="07:00:00"
-                slotMaxTime="19:00:00"
-                slotDuration="00:15:00"
-                selectable={true}
-                selectMirror={true}
-                select={handleDateSelect}
-                eventClick={handleEventClick}
-                eventClassNames="cursor-pointer"
-                height="calc(100vh - 320px)"
-                businessHours={{
-                  daysOfWeek: [1, 2, 3, 4, 5],
-                  startTime: '08:00',
-                  endTime: '17:00'
-                }}
-                eventContent={(eventInfo) => (
-                  <div className="p-1 text-xs">
-                    <div className="font-medium truncate">
-                      {eventInfo.event.title}
+        <Card className="h-full">
+          <CardContent className="p-6">
+            <FullCalendar
+              plugins={[timeGridPlugin, interactionPlugin]}
+              initialView="timeGridWeek"
+              headerToolbar={{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+              }}
+              events={resourceEvents.map(event => ({
+                ...event,
+                title: `${event.extendedProps?.appointment?.provider?.name || 'Provider'}: ${event.title}`,
+                backgroundColor: event.extendedProps?.appointment?.provider_id === providers[0]?.id ? 'hsl(217, 91%, 60%)' :
+                                 event.extendedProps?.appointment?.provider_id === providers[1]?.id ? 'hsl(142, 71%, 45%)' :
+                                 'hsl(215, 20%, 65%)'
+              }))}
+              slotMinTime="07:00:00"
+              slotMaxTime="19:00:00"
+              slotDuration="00:15:00"
+              selectable={true}
+              selectMirror={true}
+              select={handleDateSelect}
+              eventClick={handleEventClick}
+              eventClassNames="cursor-pointer"
+              height="calc(100vh - 320px)"
+              businessHours={{
+                daysOfWeek: [1, 2, 3, 4, 5],
+                startTime: '08:00',
+                endTime: '17:00'
+              }}
+              eventContent={(eventInfo) => (
+                <div className="p-1 text-xs">
+                  <div className="font-medium truncate">
+                    {eventInfo.event.title}
+                  </div>
+                  {eventInfo.event.extendedProps?.appointment?.resource && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin className="h-2 w-2" />
+                      <span className="truncate">
+                        {eventInfo.event.extendedProps.appointment.resource.name}
+                      </span>
                     </div>
-                    {eventInfo.event.extendedProps?.appointment?.resource && (
-                      <div className="flex items-center gap-1 mt-1">
-                        <MapPin className="h-2 w-2" />
-                        <span className="truncate">
-                          {eventInfo.event.extendedProps.appointment.resource.name}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              />
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Resource Utilization Sidebar */}
-        <div className="space-y-4">
-          {/* Resource Status - Commented out: Replaced by ChairStatusPanel in dashboard sidebar */}
-          {/*
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                Resource Status
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {resources.slice(0, 6).map(resource => (
-                <div key={resource.id} className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-medium">{resource.name}</div>
-                    <div className="text-xs text-muted-foreground">{resource.resource_type}</div>
-                  </div>
-                  <Badge variant={resource.is_available ? "default" : "secondary"}>
-                    {resource.is_available ? "Available" : "Occupied"}
-                  </Badge>
+                  )}
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-          */}
+              )}
+            />
+          </CardContent>
+        </Card>
 
-          {/* Provider Performance - Moved to ChairStatusTabs component */}
-
-          {/* Selected Event Details */}
-          {selectedEvent && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Appointment Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">
-                    {selectedEvent.extendedProps?.provider?.name}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">
-                    {new Date(selectedEvent.start!).toLocaleTimeString()} - 
-                    {new Date(selectedEvent.end!).toLocaleTimeString()}
-                  </span>
-                </div>
-                    {selectedEvent.extendedProps?.appointment?.resource && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">
-                          {selectedEvent.extendedProps.appointment.resource.name}
-                        </span>
-                      </div>
-                    )}
-                <Badge variant="outline">
-                  {selectedEvent.extendedProps?.appointment?.status}
-                </Badge>
-              </CardContent>
-            </Card>
-          )}
-
-        </div>
       </div>
+
+      {/* Selected Event Details - Now displayed as overlay or modal when needed */}
+      {selectedEvent && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle className="text-sm">Selected Appointment Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm">
+                {selectedEvent.extendedProps?.provider?.name}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm">
+                {new Date(selectedEvent.start!).toLocaleTimeString()} - 
+                {new Date(selectedEvent.end!).toLocaleTimeString()}
+              </span>
+            </div>
+            {selectedEvent.extendedProps?.appointment?.resource && (
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">
+                  {selectedEvent.extendedProps.appointment.resource.name}
+                </span>
+              </div>
+            )}
+            <Badge variant="outline">
+              {selectedEvent.extendedProps?.appointment?.status}
+            </Badge>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Appointment Dialog */}
       <AppointmentDialog
