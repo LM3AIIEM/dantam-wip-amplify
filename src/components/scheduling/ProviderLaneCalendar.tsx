@@ -66,10 +66,10 @@ export function ProviderLaneCalendar() {
     <div className="space-y-6">
       {/* Header card removed to save space for calendar */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Provider Lane Calendar */}
-        <div className="lg:col-span-3">
-          <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Provider Lane Calendar - Full width */}
+        <div className="lg:col-span-4">
+          <Card className="h-full">
             <CardContent className="p-6">
               <FullCalendar
                 plugins={[timeGridPlugin, interactionPlugin]}
@@ -94,7 +94,7 @@ export function ProviderLaneCalendar() {
                 select={handleDateSelect}
                 eventClick={handleEventClick}
                 eventClassNames="cursor-pointer"
-                height="600px"
+                height="calc(100vh - 320px)"
                 businessHours={{
                   daysOfWeek: [1, 2, 3, 4, 5],
                   startTime: '08:00',
