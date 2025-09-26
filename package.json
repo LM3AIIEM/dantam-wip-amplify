@@ -15,10 +15,7 @@
     "@fullcalendar/daygrid": "^6.1.19",
     "@fullcalendar/interaction": "^6.1.19",
     "@fullcalendar/react": "^6.1.19",
-<<<<<<< HEAD
-=======
     "@fullcalendar/resource-timegrid": "^6.1.19",
->>>>>>> lovable/lovable-working
     "@fullcalendar/timegrid": "^6.1.19",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",

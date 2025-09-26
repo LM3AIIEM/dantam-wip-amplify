@@ -2,19 +2,12 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-<<<<<<< HEAD
-import { toast } from 'sonner';
-
-interface PatientRegistrationProps {
-  onComplete: (data: any) => void;
-=======
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { PatientRegistration as PatientRegistrationType } from '@/types/patient-management';
 
 interface PatientRegistrationProps {
   onComplete: (data: PatientRegistrationType) => void;
->>>>>>> lovable/lovable-working
   onCancel: () => void;
 }
 
@@ -24,13 +17,6 @@ export function PatientRegistration({ onComplete, onCancel }: PatientRegistratio
     lastName: '',
     phone: '',
     email: '',
-<<<<<<< HEAD
-  });
-
-  const handleSubmit = () => {
-    toast.success('Patient registration completed (simplified demo)');
-    onComplete(formData);
-=======
     dateOfBirth: '',
     emergencyContactName: '',
     emergencyContactPhone: '',
@@ -132,7 +118,6 @@ export function PatientRegistration({ onComplete, onCancel }: PatientRegistratio
     } finally {
       setIsSubmitting(false);
     }
->>>>>>> lovable/lovable-working
   };
 
   return (
@@ -141,49 +126,6 @@ export function PatientRegistration({ onComplete, onCancel }: PatientRegistratio
         <CardHeader>
           <h2 className="text-xl font-semibold">Add New Patient</h2>
         </CardHeader>
-<<<<<<< HEAD
-        <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">First Name</label>
-            <Input
-              value={formData.firstName}
-              onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-              className="medical-input"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Last Name</label>
-            <Input
-              value={formData.lastName}
-              onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-              className="medical-input"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Phone</label>
-            <Input
-              value={formData.phone}
-              onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="medical-input"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Email</label>
-            <Input
-              value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="medical-input"
-            />
-          </div>
-          <div className="flex gap-2 pt-4">
-            <Button variant="outline" onClick={onCancel} className="flex-1">
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} className="medical-button-primary flex-1">
-              Add Patient
-            </Button>
-          </div>
-=======
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -309,7 +251,6 @@ export function PatientRegistration({ onComplete, onCancel }: PatientRegistratio
               </Button>
             </div>
           </form>
->>>>>>> lovable/lovable-working
         </CardContent>
       </Card>
     </div>

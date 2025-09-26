@@ -55,18 +55,11 @@ export function PatientDirectory() {
   const handleRegistrationComplete = async (data: PatientRegistrationType) => {
     try {
       await createPatient(data);
-<<<<<<< HEAD
-      toast.success('Patient registration completed successfully');
-      setShowRegistration(false);
-    } catch (error) {
-      console.error('Error creating patient:', error);
-=======
       setShowRegistration(false);
       // Success toast is already handled in the createPatient function
     } catch (error) {
       console.error('Error creating patient:', error);
       // Error toast is already handled in the createPatient function
->>>>>>> lovable/lovable-working
     }
   };
 

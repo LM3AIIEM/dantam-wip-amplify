@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { SchedulingCalendar } from '@/components/scheduling/SchedulingCalendar';
-import { AppLayout } from '@/components/layout/AppLayout';
-
-export default function SchedulingPage() {
-=======
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ProviderLaneCalendar } from '@/components/scheduling/ProviderLaneCalendar';
@@ -48,7 +42,6 @@ export default function SchedulingPage() {
     console.log('Navigate to /scheduling/schedule');
   };
 
->>>>>>> lovable/lovable-working
   const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Scheduling', isCurrentPage: true }
@@ -56,10 +49,6 @@ export default function SchedulingPage() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-<<<<<<< HEAD
-      <div className="p-6">
-        <SchedulingCalendar />
-=======
       <div className="flex flex-col h-[calc(100vh-4rem)]">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
@@ -200,7 +189,6 @@ export default function SchedulingPage() {
             <TodaysAppointmentsList className="flex-1" />
           </div>
         </div>
->>>>>>> lovable/lovable-working
       </div>
     </AppLayout>
   );
