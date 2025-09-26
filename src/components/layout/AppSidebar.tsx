@@ -101,7 +101,7 @@ const navigationGroups: NavigationGroup[] = [
         id: 'appointments',
         title: 'Appointments',
         icon: Calendar,
-        href: '/appointments',
+        href: '/scheduling',
         description: 'Scheduling and calendar management',
         badge: '12',
         requiredRoles: ['super_admin', 'clinic_admin', 'doctor', 'hygienist', 'receptionist'],
