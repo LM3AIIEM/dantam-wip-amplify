@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Calendar, 
@@ -7,12 +8,29 @@ import {
   Clock, 
   TrendingUp,
   Users,
-  AlertCircle
+  AlertCircle,
+  Settings,
+  ClipboardList,
+  Wrench
 } from 'lucide-react';
 import { useScheduling } from '@/hooks/useScheduling';
+import { useNavigate } from 'react-router-dom';
 
 export function SchedulingMetrics() {
   const { appointments, resources, loading, selectedDate } = useScheduling();
+  const navigate = useNavigate();
+
+  const handleManageProviders = () => {
+    navigate('/provider-management');
+  };
+
+  const handleWaitList = () => {
+    navigate('/wait-list');
+  };
+
+  const handleResourceSetup = () => {
+    console.log('Navigate to /resource-setup'); // Placeholder for future route
+  };
 
   const metrics = useMemo(() => {
     const today = new Date();
@@ -84,6 +102,43 @@ export function SchedulingMetrics() {
   }
 
   return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* Quick Actions - Moved from ProviderLaneCalendar */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full justify-start"
+            onClick={handleManageProviders}
+          >
+            <Users className="h-4 w-4 mr-2" />
+            Manage Providers
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full justify-start"
+            onClick={handleWaitList}
+          >
+            <ClipboardList className="h-4 w-4 mr-2" />
+            Wait List
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full justify-start"
+            onClick={handleResourceSetup}
+          >
+            <Wrench className="h-4 w-4 mr-2" />
+            Resource Setup
+          </Button>
+        </CardContent>
+      </Card>
+
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {/* Total Appointments */}
       <Card>
@@ -170,6 +225,7 @@ export function SchedulingMetrics() {
           </p>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }
