@@ -98,14 +98,38 @@ const navigationGroups: NavigationGroup[] = [
         ],
       },
       {
-        id: 'appointments',
-        title: 'Appointments',
+        id: 'scheduling',
+        title: 'Scheduling',
         icon: Calendar,
         href: '/scheduling',
         description: 'Scheduling and calendar management',
         badge: '12',
         requiredRoles: ['super_admin', 'clinic_admin', 'doctor', 'hygienist', 'receptionist'],
+        children: [
+          {
+            id: 'calendar',
+            title: 'Calendar',
+            icon: Calendar,
+            href: '/scheduling',
+            requiredRoles: ['super_admin', 'clinic_admin', 'doctor', 'hygienist', 'receptionist'],
+          },
+          {
+            id: 'resources',
+            title: 'Resources',
+            icon: Activity,
+            href: '/scheduling/resources',
+            requiredRoles: ['super_admin', 'clinic_admin', 'doctor', 'hygienist', 'receptionist'],
+          },
+          {
+            id: 'waitlist',
+            title: 'WaitList',
+            icon: ClipboardList,
+            href: '/scheduling/waitlist',
+            requiredRoles: ['super_admin', 'clinic_admin', 'doctor', 'hygienist', 'receptionist'],
+          },
+        ],
       },
+      // Clinical Charts and Inventory hidden for CEO demo
     ],
   },
   {
@@ -128,6 +152,7 @@ const navigationGroups: NavigationGroup[] = [
         description: 'Patient messaging and campaigns',
         requiredRoles: ['super_admin', 'clinic_admin', 'doctor', 'receptionist'],
       },
+      // Inventory hidden for CEO demo
     ],
   },
   {
@@ -295,6 +320,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
         ))}
       </SidebarContent>
 
+      {/* Footer hidden for CEO demo */}
     </Sidebar>
   );
 }

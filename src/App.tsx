@@ -32,6 +32,7 @@ const App = () => (
             <Route path="/scheduling" element={<ProtectedRoute><SchedulingPage /></ProtectedRoute>} />
             <Route path="/financial" element={<ProtectedRoute><FinancialPage /></ProtectedRoute>} />
             <Route path="/communications" element={<ProtectedRoute><CommunicationsPage /></ProtectedRoute>} />
+            {/* /charts and /inventory routes hidden for CEO demo */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

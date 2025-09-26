@@ -86,6 +86,8 @@ export default function FinancialPage() {
             <PaymentProcessing />
           </TabsContent>
 
+          {/* Insurance tab hidden for CEO demo */}
+
           <TabsContent value="reports" className="space-y-6">
             <FinancialReports />
           </TabsContent>
