@@ -184,23 +184,6 @@ export function ProviderLaneCalendar() {
             </Card>
           )}
 
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button variant="outline" size="sm" className="w-full">
-                Manage Providers
-              </Button>
-              <Button variant="outline" size="sm" className="w-full">
-                Wait List
-              </Button>
-              <Button variant="outline" size="sm" className="w-full">
-                Resource Setup
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
 
